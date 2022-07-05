@@ -41,7 +41,8 @@ namespace Vessels.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Date,Latitude,Longitude,VesselIMO")] VesselPosition vesselPosition)
+        public async Task<IActionResult> Create([Bind(nameof(VesselPosition.Id), nameof(VesselPosition.Date),
+            nameof(VesselPosition.Latitude),nameof(VesselPosition.Longitude),nameof(VesselPosition.VesselIMO))] VesselPosition vesselPosition)
         {
             if (ModelState.IsValid) 
             {
@@ -68,7 +69,8 @@ namespace Vessels.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Latitude,Longitude,VesselIMO")] VesselPosition vesselPosition)
+        public async Task<IActionResult> Edit(int id, [Bind(nameof(VesselPosition.Id), nameof(VesselPosition.Date),
+            nameof(VesselPosition.Latitude),nameof(VesselPosition.Longitude),nameof(VesselPosition.VesselIMO))] VesselPosition vesselPosition)
         {
             if (id != vesselPosition.Id) { return NotFound(); }
 
