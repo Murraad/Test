@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Vessels.Data.Models;
+using Vessels.Hubs;
 using Vessels.Repositories;
 
 namespace Vessels.Controllers
@@ -9,10 +11,12 @@ namespace Vessels.Controllers
     public class HomeController : Controller
     {
         private readonly IDataRepository dataRepository;
+        private readonly IHubContext<VesselPositionsHub> hubContext;
 
-        public HomeController(IDataRepository dataRepository)
+        public HomeController(IDataRepository dataRepository, IHubContext<VesselPositionsHub> hubContext)
         {
             this.dataRepository = dataRepository;
+            this.hubContext = hubContext;
         }
 
         // GET: Home
@@ -47,6 +51,12 @@ namespace Vessels.Controllers
             if (ModelState.IsValid) 
             {
                 await this.dataRepository.AddPositionAsync(vesselPosition);
+                var createdPosition = await dataRepository.GetPositionAsync(vesselPosition.Id);
+                if(createdPosition is not null)
+                {
+                    createdPosition.Vessel.VesselPositions = null;
+                    await this.hubContext.Clients.All.SendAsync("ReceiveMessage", createdPosition);
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.VesselIMOs = await this.GetVessels();
