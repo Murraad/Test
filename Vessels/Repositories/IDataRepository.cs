@@ -2,7 +2,7 @@
 
 namespace Vessels.Repositories
 {
-    public interface IDataRepository
+    public interface IDataRepository : IDisposable
     {
         Task<IEnumerable<VesselPosition>> GetAllPositionsAsync();
         Task<VesselPosition?> GetPositionAsync(int id);

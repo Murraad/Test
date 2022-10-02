@@ -129,5 +129,11 @@ namespace Vessels.Controllers
         private bool VesselPositionExists(int id) => this.dataRepository.PositionExists(id);
 
         private async Task<SelectList> GetVessels() => new SelectList(await this.dataRepository.GetVesselsAsync(), nameof(Vessel.IMO), nameof(Vessel.Name));
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            this.dataRepository.Dispose();
+        }
     }
 }
